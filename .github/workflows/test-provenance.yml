@@ -14,6 +14,7 @@ permissions:
 jobs:
   test-provenance:
     runs-on: ubuntu-latest
+    environment: npm
     steps:
       - uses: actions/checkout@v4
 
@@ -26,12 +27,6 @@ jobs:
           echo "Bun version:"
           bun --version
 
-      - name: Setup npm auth
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
       - name: Publish with provenance (dry-run)
         if: ${{ inputs.dry_run }}
         run: bun publish --provenance --dry-run
@@ -39,5 +34,3 @@ jobs:
       - name: Publish with provenance
         if: ${{ !inputs.dry_run }}
         run: bun publish --provenance
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
