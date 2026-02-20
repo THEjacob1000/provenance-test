@@ -1,0 +1,43 @@
+name: Test Provenance
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run (don't actually publish)"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  test-provenance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install custom bun
+        run: |
+          curl -L https://github.com/THEjacob1000/bun/releases/download/provenance-test/bun-linux-x64.zip -o bun.zip
+          unzip bun.zip
+          chmod +x bun
+          sudo mv bun /usr/local/bin/bun
+          echo "Bun version:"
+          bun --version
+
+      - name: Setup npm auth
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish with provenance (dry-run)
+        if: ${{ inputs.dry_run }}
+        run: bun publish --provenance --dry-run
+
+      - name: Publish with provenance
+        if: ${{ !inputs.dry_run }}
+        run: bun publish --provenance
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
