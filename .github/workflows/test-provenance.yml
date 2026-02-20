@@ -14,13 +14,12 @@ permissions:
 jobs:
   test-provenance:
     runs-on: ubuntu-latest
-    environment: npm
     steps:
       - uses: actions/checkout@v4
 
       - name: Install custom bun
         run: |
-          curl -L https://github.com/THEjacob1000/bun/releases/download/provenance-test/bun-linux-x64.zip -o bun.zip
+          curl -L https://github.com/THEjacob1000/bun/releases/download/provenance-test-1.0.1/bun-linux-x64.zip -o bun.zip
           unzip bun.zip
           chmod +x bun
           sudo mv bun /usr/local/bin/bun

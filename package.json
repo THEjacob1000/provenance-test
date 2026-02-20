@@ -1,6 +1,6 @@
 {
   "name": "@thejacob1000/provenance-test",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Test package for bun publish --provenance",
   "main": "index.js",
   "license": "MIT",
